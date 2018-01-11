@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(flex_bison)
+project(cubish)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -17,7 +17,7 @@ ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_executable(flex_bison
+add_executable(cubish
 #        main.cpp
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}

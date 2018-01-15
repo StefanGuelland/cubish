@@ -49,20 +49,20 @@ L			[a-zA-Z_]
 
 "Ueberschneidet"	{return T_UEBERSCHNEIDET;}
 
-"Setze"             {return T_SETZE;}
-"Auf"               {return T_AUF;}
-"Erstelle"          {return T_ERSTELLE;}
-"Verschiebe"        {return T_VERSCHIEBE;}
-"Rotiere"           {return T_ROTIERE;}
-"Anzeigen"          {return T_ANZEIGEN;}
-"Warte"             {return T_WARTE;}
-"Von"               {return T_VON;}
-"Um"                {return T_UM;}
-"Grad"              {return T_GRAD;}
-"Entferne"          {return T_ENTFERNE;}
-"Faerbe"            {return T_FAERBE;}
-"Zeiteinheiten"     {return T_ZEITEINHEITEN;}
-"ms"                {return T_MS;}
+"Setze"             {return T_KEYWORD_SETZE;}
+"Auf"               {return T_KEYWORD_AUF;}
+"Erstelle"          {return T_KEYWORD_ERSTELLE;}
+"Verschiebe"        {return T_KEYWORD_VERSCHIEBE;}
+"Rotiere"           {return T_KEYWORD_ROTIERE;}
+"Anzeigen"          {return T_KEYWORD_ANZEIGEN;}
+"Warte"             {return T_KEYWORD_WARTE;}
+"Von"               {return T_KEYWORD_VON;}
+"Um"                {return T_KEYWORD_UM;}
+"Grad"              {return T_KEYWORD_GRAD;}
+"Entferne"          {return T_KEYWORD_ENTFERNE;}
+"Faerbe"            {return T_KEYWORD_FAERBE;}
+"Zeiteinheiten"     {return T_KEYWORD_ZEITEINHEITEN;}
+"ms"                {return T_KEYWORD_MS;}
 
 "Links"             {return T_LINKS;}
 "Rechts"            {return T_RECHTS;}

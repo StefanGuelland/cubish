@@ -47,20 +47,21 @@ void yyerror(const char* s);
 
 %token T_UEBERSCHNEIDET
 
-%token T_SETZE
-%token T_AUF
-%token T_ERSTELLE
-%token T_VERSCHIEBE
-%token T_ROTIERE
-%token T_ANZEIGEN
-%token T_WARTE
-%token T_UM
-%token T_VON
-%token T_GRAD
-%token T_ENTFERNE
-%token T_FAERBE
-%token T_ZEITEINHEITEN
-%token T_MS
+%token T_KEYWORD_RGB
+%token T_KEYWORD_SETZE
+%token T_KEYWORD_AUF
+%token T_KEYWORD_ERSTELLE
+%token T_KEYWORD_VERSCHIEBE
+%token T_KEYWORD_ROTIERE
+%token T_KEYWORD_ANZEIGEN
+%token T_KEYWORD_WARTE
+%token T_KEYWORD_UM
+%token T_KEYWORD_VON
+%token T_KEYWORD_GRAD
+%token T_KEYWORD_ENTFERNE
+%token T_KEYWORD_FAERBE
+%token T_KEYWORD_ZEITEINHEITEN
+%token T_KEYWORD_MS
 
 %token T_LINKS
 %token T_RECHTS
@@ -77,15 +78,6 @@ void yyerror(const char* s);
 %left T_MINUS
 %left T_MULTIPLY
 %left T_DIVIDE
-
-%token T_KEYWORD_RGB
-%token T_KEYWORD_AUF
-%token T_KEYWORD_UM
-%token T_KEYWORD_FAERBE
-%token T_KEYWORD_VERSCHIEBE
-%token T_KEYWORD_ROTIERE
-%token T_KEYWORD_ACHSE
-%token T_KEYWORD_ANZEIGEN
 
 %token T_COLOUR_BLUE
 %token T_COLOUR_YELLOW

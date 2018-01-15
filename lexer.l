@@ -49,8 +49,8 @@ L			[a-zA-Z_]
 "Plus"		        {return T_PLUS;}
 "Minus"		        {return T_MINUS;}
 "Mal"		        {return T_MAL;}
-"Geteilt"		    {return T_GETEILT;}
-"Durch"             {return T_DURCH;}
+"Geteilt Durch"		{return T_GETEILT_DURCH;}
+"Geteilt"           {return T_GETEILT;}
 "Modulo"		    {return T_MODULO;}
 
 "Nicht"		        {return T_NICHT;}

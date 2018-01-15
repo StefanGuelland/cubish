@@ -30,6 +30,7 @@ void yyerror(const char* s);
 %token T_MINUS
 %token T_MAL
 %token T_GETEILT
+%token T_GETEILT_DURCH
 %token T_DURCH
 %token T_MODULO
 
@@ -111,13 +112,10 @@ void yyerror(const char* s);
 %token<farbe_val> T_FARBE
 %token<koordinate_val> T_KOORDINATE
 
-
-%type<ival> expression
-
 %type<koordinate_val> koordinate
 %type<farbe_val> farbe
 
-%start calculation
+%start program
 
 %%
 
@@ -212,15 +210,53 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
      }
 ;
 
-calculation:
-	   | calculation line
+
+
+
+math_exp:
+    | T_KL_LINKS math_exp T_KL_RECHTS                         {printf("\t Klammern\n");}
+    | T_IDENTIFIER T_PLUS T_IDENTIFIER                        {printf("\t Plus\n");}
+    | T_IDENTIFIER T_MINUS T_IDENTIFIER                       {printf("\t Minus\n");}
+    | T_IDENTIFIER T_MAL T_IDENTIFIER                         {printf("\t Mal\n");}
+    | T_IDENTIFIER T_GETEILT T_IDENTIFIER                     {printf("\t Geteilt\n");}
+    | T_IDENTIFIER T_GETEILT_DURCH T_IDENTIFIER               {printf("\t Geteilt durch\n");}
+    | T_IDENTIFIER T_MODULO T_IDENTIFIER                      {printf("\t Modulo\n");}
+;
+
+identifier_or_math_exp:
+    | T_IDENTIFIER
+    | math_exp
+;
+
+arith_exp:
+    | identifier_or_math_exp T_GLEICH T_IDENTIFIER            {printf("\t Gleich\n");}
+    | identifier_or_math_exp T_KLEINER T_IDENTIFIER           {printf("\t Kleiner\n");}
+    | identifier_or_math_exp T_GROESSER T_IDENTIFIER          {printf("\t Groesser\n");}
+    | identifier_or_math_exp T_KLEINER_GLEICH T_IDENTIFIER    {printf("\t Kleiner Gleich\n");}
+    | identifier_or_math_exp T_GROESSER_GLEICH T_IDENTIFIER   {printf("\t Groesser Gleich\n");}
+    | identifier_or_math_exp T_UEBERSCHNEIDET T_IDENTIFIER    {printf("\t Ueberschneidet\n");}
+;
+
+exp:
+    | arith_exp                                               {printf("\t Arithmatischer Ausdruck\n");}
+    | T_KL_LINKS arith_exp T_KL_RECHTS                        {printf("\t Arithmatischer Ausdruck\n");}
+    | T_KL_LINKS math_exp T_KL_RECHTS arith_exp               {printf("\t Gemischter Ausdruck\n");}
+;
+
+smt:
+    | cmd
+    | smt T_SONST cmd
+;
+
+loop_and_exp:
+    | T_WIEDERHOLE cmd T_SOLANGE exp                {printf("\t Schleife\n");}
+    | T_WENN exp T_DANN smt                         {printf("\t If-Abfrage\n");}
+
 ;
 
 line: T_NEWLINE
-    | expression T_NEWLINE {
-            printf("\tResult: %i\n", $1);
-        }
-
+    | loop_and_exp T_NEWLINE
+    | exp T_NEWLINE
     | cmd T_NEWLINE
     | koordinate T_NEWLINE {
            printf("\tX: %i Y: %i Z: %i \n", $1.x, $1.y, $1.z);
@@ -233,12 +269,10 @@ line: T_NEWLINE
         }
 ;
 
-expression: T_INT				{ $$ = $1; }
-	  | expression T_PLUS expression	{ $$ = $1 + $3; }
-	  | expression T_MINUS expression	{ $$ = $1 - $3; }
-	  | expression T_MULTIPLY expression	{ $$ = $1 * $3; }
-	  | T_KL_LINKS expression T_KL_RECHTS		{ $$ = $2; }
+program:
+	   | program line
 ;
+
 
 %%
 

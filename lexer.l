@@ -1,7 +1,11 @@
 %option noyywrap
+%option caseless
+
+L			[a-zA-Z_]
 
 %{
 #include <stdio.h>
+#include <stdint.h>
 
 #define YY_DECL int yylex()
 
@@ -12,16 +16,78 @@
 %%
 
 [ \t]	; // ignore all whitespace
-[0-9]+\.[0-9]+ 	{yylval.fval = atof(yytext); return T_FLOAT;}
 [0-9]+		{yylval.ival = atoi(yytext); return T_INT;}
-\n		{return T_NEWLINE;}
-"+"		{return T_PLUS;}
-"-"		{return T_MINUS;}
-"*"		{return T_MULTIPLY;}
-"/"		{return T_DIVIDE;}
-"("		{return T_LEFT;}
-")"		{return T_RIGHT;}
+\n	    	{return T_NEWLINE;}
+
 "exit"		{return T_QUIT;}
 "quit"		{return T_QUIT;}
 
+"rgb"       {return T_KEYWORD_RGB;}
+
+"Wiederhole"        {return T_WIEDERHOLE;}
+"Solange"           {return T_SOLANGE;}
+"Wenn"              {return T_WENN;}
+"Dann"              {return T_DANN;}
+"Sonst"             {return T_SONST;}
+"Ende"              {return T_ENDE;}
+
+"Gleich"		    {return T_GLEICH;}
+"Kleiner"		    {return T_KLEINER;}
+"Kleiner Gleich"	{return T_KLEINER_GLEICH;}
+"Groesser"		    {return T_GROESSER;}
+"Groesser Gleich"	{return T_GROESSER_GLEICH;}
+
+"Plus"		        {return T_PLUS;}
+"Minus"		        {return T_MINUS;}
+"Mal"		        {return T_MAL;}
+"Geteilt"		    {return T_GETEILT;}
+"Modulo"		    {return T_MODULO;}
+
+"Nicht"		        {return T_NICHT;}
+"Und"		        {return T_UND;}
+"Oder"		        {return T_ODER;}
+
+"Ueberschneidet"	{return T_UEBERSCHNEIDET;}
+
+"Setze"             {return T_SETZE;}
+"Auf"               {return T_AUF;}
+"Erstelle"          {return T_ERSTELLE;}
+"Verschiebe"        {return T_VERSCHIEBE;}
+"Rotiere"           {return T_ROTIERE;}
+"Anzeigen"          {return T_ANZEIGEN;}
+"Warte"             {return T_WARTE;}
+"Von"               {return T_VON;}
+"Um"                {return T_UM;}
+"Grad"              {return T_GRAD;}
+"Entferne"          {return T_ENTFERNE;}
+"Faerbe"            {return T_FAERBE;}
+"Zeiteinheiten"     {return T_ZEITEINHEITEN;}
+"ms"                {return T_MS;}
+
+"Links"             {return T_LINKS;}
+"Rechts"            {return T_RECHTS;}
+
+"("		            {return T_KL_LINKS;}
+")"		            {return T_KL_RECHTS;}
+","                 {return T_SEPARATOR;}
+
+"X-Achse"           {return T_X_AXE;}
+"Y-Achse"           {return T_Y_AXE;}
+"Z-Achse"           {return T_Z_AXE;}
+
+"Blau"              {return T_COLOUR_BLUE;}
+"Gelb"              {return T_COLOUR_YELLOW;}
+"Gruen"             {return T_COLOUR_GREEN;}
+"Rot"               {return T_COLOUR_RED;}
+"Weiß"              {return T_COLOUR_WHITE;}
+"Schwarz"           {return T_COLOUR_BLACK;}
+
+"X-Minimal"         {return T_X_MIN;}
+"X-Maximal"         {return T_X_MAX;}
+"Y-Minimal"         {return T_Y_MIN;}
+"Y-Maximal"         {return T_Y_MAX;}
+"Z-Minimal"         {return T_Z_MIN;}
+"Z-Maximal"         {return T_Z_MAX;}
+
+{L}+   {return T_IDENTIFIER;}
 %%

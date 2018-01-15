@@ -33,8 +33,6 @@ L			[a-zA-Z_]
 "exit"		        {return T_QUIT;}
 "quit"		        {return T_QUIT;}
 
-"rgb"               {return T_KEYWORD_RGB;}
-
 "Wiederhole"        {return T_WIEDERHOLE;}
 "Solange"           {return T_SOLANGE;}
 "Wenn"              {return T_WENN;}
@@ -61,9 +59,14 @@ L			[a-zA-Z_]
 
 "Ueberschneidet"	{return T_UEBERSCHNEIDET;}
 
+
+"rgb"               {return T_KEYWORD_RGB;}
 "Setze"             {return T_KEYWORD_SETZE;}
 "Auf"               {return T_KEYWORD_AUF;}
 "Erstelle"          {return T_KEYWORD_ERSTELLE;}
+"Zahl"              {return T_KEYWORD_ZAHL;}
+"Wuerfel"           {return T_KEYWORD_WUERFEL;}
+"Box"               {return T_KEYWORD_BOX;}
 "Verschiebe"        {return T_KEYWORD_VERSCHIEBE;}
 "Rotiere"           {return T_KEYWORD_ROTIERE;}
 "Anzeigen"          {return T_KEYWORD_ANZEIGEN;}
@@ -74,6 +77,7 @@ L			[a-zA-Z_]
 "Entferne"          {return T_KEYWORD_ENTFERNE;}
 "Faerbe"            {return T_KEYWORD_FAERBE;}
 "Zeiteinheiten"     {return T_KEYWORD_ZEITEINHEITEN;}
+"Zeiteinheit"       {return T_KEYWORD_ZEITEINHEITEN;}
 "ms"                {return T_KEYWORD_MS;}
 
 "Links"             {return T_LINKS;}

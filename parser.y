@@ -19,6 +19,11 @@ void yyerror(const char* s);
 	    uint8_t g;
 	    uint8_t b;
 	} farbe_val;
+	struct{
+	    int x;
+	    int y;
+	    int z;
+	} koordinate_val;
 }
 
 %token T_PLUS
@@ -52,6 +57,9 @@ void yyerror(const char* s);
 %token T_KEYWORD_SETZE
 %token T_KEYWORD_AUF
 %token T_KEYWORD_ERSTELLE
+%token T_KEYWORD_ZAHL
+%token T_KEYWORD_WUERFEL
+%token T_KEYWORD_BOX
 %token T_KEYWORD_VERSCHIEBE
 %token T_KEYWORD_ROTIERE
 %token T_KEYWORD_ANZEIGEN
@@ -84,6 +92,7 @@ void yyerror(const char* s);
 %token T_FARBE_GELB
 %token T_FARBE_GRUEN
 %token T_FARBE_ROT
+%token T_FARBE_TUERKIS
 %token T_FARBE_WEISS
 %token T_FARBE_SCHWARZ
 
@@ -100,15 +109,24 @@ void yyerror(const char* s);
 %token<fval> T_FLOAT
 
 %token<farbe_val> T_FARBE
+%token<koordinate_val> T_KOORDINATE
 
 
 %type<ival> expression
 
+%type<koordinate_val> koordinate
 %type<farbe_val> farbe
 
 %start calculation
 
 %%
+
+koordinate: T_KOORDINATE { $$ = $1; }
+     | T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS{
+           $$.x = $2;
+           $$.y = $4;
+           $$.z = $6;
+      }
 
 farbe: T_FARBE { $$ = $1; }
      | T_KEYWORD_RGB T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS {
@@ -136,7 +154,7 @@ farbe: T_FARBE { $$ = $1; }
             $$.g = 0;
             $$.b = 0;
         }
-     | T_FARBE_ROT {
+     | T_FARBE_TUERKIS {
              $$.r = 0;
              $$.g = 255;
              $$.b = 255;
@@ -153,8 +171,44 @@ farbe: T_FARBE { $$ = $1; }
         }
 ;
 
-cmd: T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_UM farbe {
-         printf("\t cmd faerbe: Red: %i Green: %i Blue: %i \n", $4.r, $4.g, $4.b);
+cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
+              printf("Erstelle Zahl x \n");
+     }
+   | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS T_INT T_KL_RECHTS T_IDENTIFIER {
+              printf("\t cmd erstelle wurfel mit Kantenlaenge %d\n",$4);
+     }
+   | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS T_IDENTIFIER {
+              printf("\t cmd erstelle box mit Kantenlaengen x: %d y: %d z: %d\n", $4, $6, $8);
+     }
+   | T_KEYWORD_VERSCHIEBE T_IDENTIFIER T_KEYWORD_UM koordinate {
+              printf("\t cmd verschiebe um: X: %i Y: %i Z: %i \n", $4.x, $4.y, $4.z);
+     }
+   | T_KEYWORD_VERSCHIEBE T_IDENTIFIER T_KEYWORD_AUF koordinate {
+              printf("\t cmd verschiebe auf: X: %i Y: %i Z: %i \n", $4.x, $4.y, $4.z);
+     }
+   | T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_UM farbe {
+         printf("\t cmd faerbe um: Red: %i Green: %i Blue: %i \n", $4.r, $4.g, $4.b);
+     }
+   | T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_AUF farbe {
+              printf("\t cmd faerbe auf: Red: %i Green: %i Blue: %i \n", $4.r, $4.g, $4.b);
+     }
+   | T_KEYWORD_ROTIERE T_KEYWORD_AUF T_X_AXE T_LINKS {
+              printf("\tRotiere links auf x achse...\n");
+     }
+   | T_KEYWORD_ROTIERE T_KEYWORD_AUF T_X_AXE T_RECHTS {
+              printf("\tRotiere rechts auf x achse...\n");
+     }
+   | T_KEYWORD_WARTE T_INT T_KEYWORD_ZEITEINHEITEN {
+              printf("\tWarte x Zeiteinheiten...\n");
+     }
+   | T_KEYWORD_ENTFERNE T_IDENTIFIER {
+              printf("\tEntferne Identifier\n");
+     }
+   | T_KEYWORD_SETZE T_KEYWORD_ZEITEINHEITEN T_KEYWORD_AUF T_INT T_KEYWORD_MS {
+              printf("\t Setze Zeiteinheit auf xx ms\n");
+     }
+   | T_KEYWORD_ANZEIGEN {
+              printf("\t Sende Inhalte an Cube... \n");
      }
 ;
 
@@ -168,11 +222,11 @@ line: T_NEWLINE
         }
 
     | cmd T_NEWLINE
+    | koordinate T_NEWLINE {
+           printf("\tX: %i Y: %i Z: %i \n", $1.x, $1.y, $1.z);
+       }
     | farbe T_NEWLINE {
             printf("\tRed: %i Green: %i Blue: %i \n", $1.r, $1.g, $1.b);
-        }
-    | T_KEYWORD_ANZEIGEN T_NEWLINE {
-            printf("Zeichne auf Cube\n");
         }
     | T_QUIT T_NEWLINE {
             printf("bye!\n"); exit(0);

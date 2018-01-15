@@ -15,14 +15,14 @@ L			[a-zA-Z_]
 
 %%
 
-[ \t]	; // ignore all whitespace
-[0-9]+		{yylval.ival = atoi(yytext); return T_INT;}
-\n	    	{return T_NEWLINE;}
+[ \t]	;           // ignore all whitespace
+[0-9]+		        {yylval.ival = atoi(yytext); return T_INT;}
+\n	    	        {return T_NEWLINE;}
 
-"exit"		{return T_QUIT;}
-"quit"		{return T_QUIT;}
+"exit"		        {return T_QUIT;}
+"quit"		        {return T_QUIT;}
 
-"rgb"       {return T_KEYWORD_RGB;}
+"rgb"               {return T_KEYWORD_RGB;}
 
 "Wiederhole"        {return T_WIEDERHOLE;}
 "Solange"           {return T_SOLANGE;}
@@ -76,12 +76,13 @@ L			[a-zA-Z_]
 "Y-Achse"           {return T_Y_AXE;}
 "Z-Achse"           {return T_Z_AXE;}
 
-"Blau"              {return T_COLOUR_BLUE;}
-"Gelb"              {return T_COLOUR_YELLOW;}
-"Gruen"             {return T_COLOUR_GREEN;}
-"Rot"               {return T_COLOUR_RED;}
-"Weiß"              {return T_COLOUR_WHITE;}
-"Schwarz"           {return T_COLOUR_BLACK;}
+"Blau"              {return T_FARBE_BLAU;}
+"Gelb"              {return T_FARBE_GELB;}
+"Gruen"             {return T_FARBE_GRUEN;}
+"Rot"               {return T_FARBE_ROT;}
+"TUERKIS"           {return T_FARBE_TUERKIS;}
+"Weiß"              {return T_FARBE_WEISS;}
+"Schwarz"           {return T_FARBE_SCHWARZ;}
 
 "X-Minimal"         {return T_X_MIN;}
 "X-Maximal"         {return T_X_MAX;}

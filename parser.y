@@ -25,6 +25,7 @@ void yyerror(const char* s);
 %token T_MINUS
 %token T_MAL
 %token T_GETEILT
+%token T_DURCH
 %token T_MODULO
 
 %token T_KL_LINKS
@@ -79,12 +80,12 @@ void yyerror(const char* s);
 %left T_MULTIPLY
 %left T_DIVIDE
 
-%token T_COLOUR_BLUE
-%token T_COLOUR_YELLOW
-%token T_COLOUR_GREEN
-%token T_COLOUR_RED
-%token T_COLOUR_WHITE
-%token T_COLOUR_BLACK
+%token T_FARBE_BLAU
+%token T_FARBE_GELB
+%token T_FARBE_GRUEN
+%token T_FARBE_ROT
+%token T_FARBE_WEISS
+%token T_FARBE_SCHWARZ
 
 %token T_X_MIN
 %token T_X_MAX
@@ -115,6 +116,41 @@ farbe: T_FARBE { $$ = $1; }
             $$.g = $5;
             $$.b = $7;
        }
+     | T_FARBE_BLAU {
+            $$.r = 0;
+            $$.g = 0;
+            $$.b = 255;
+        }
+     | T_FARBE_GELB {
+            $$.r = 255;
+            $$.g = 255;
+            $$.b = 0;
+        }
+     | T_FARBE_GRUEN {
+            $$.r = 0;
+            $$.g = 255;
+            $$.b = 0;
+        }
+     | T_FARBE_ROT {
+            $$.r = 255;
+            $$.g = 0;
+            $$.b = 0;
+        }
+     | T_FARBE_ROT {
+             $$.r = 0;
+             $$.g = 255;
+             $$.b = 255;
+         }
+     | T_FARBE_WEISS {
+            $$.r = 255;
+            $$.g = 255;
+            $$.b = 255;
+        }
+     | T_FARBE_SCHWARZ {
+            $$.r = 0;
+            $$.g = 0;
+            $$.b = 0;
+        }
 ;
 
 cmd: T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_UM farbe {

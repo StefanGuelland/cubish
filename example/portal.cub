@@ -15,9 +15,13 @@ verschiebe portalB auf (0, 0, -3)
 anzeigen
 
 wiederhole
-    verschiebe point auf (x, 0, 0)
-	x = x +1
-	warte 1
-	anzeigen
+	wiederhole
+		verschiebe point auf (x, 0, 0)
+		x = x +1
+		warte 1
+		anzeigen
+	bis
+		x groesser 2
+	x = -2
 bis
-    x groesser 2
+    1 groesser 2

@@ -110,7 +110,6 @@ void yyerror(const char* s);
 
 
 %type<ival> expression
-%type<fval> mixed_expression
 
 %type<farbe_val> farbe
 

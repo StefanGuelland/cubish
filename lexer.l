@@ -41,6 +41,7 @@ L			[a-zA-Z_]
 "Minus"		        {return T_MINUS;}
 "Mal"		        {return T_MAL;}
 "Geteilt"		    {return T_GETEILT;}
+"Durch"             {return T_DURCH;}
 "Modulo"		    {return T_MODULO;}
 
 "Nicht"		        {return T_NICHT;}

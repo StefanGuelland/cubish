@@ -25,6 +25,7 @@ void yyerror(const char* s);
 %token T_MINUS
 %token T_MAL
 %token T_GETEILT
+%token T_DURCH
 %token T_MODULO
 
 %token T_KL_LINKS

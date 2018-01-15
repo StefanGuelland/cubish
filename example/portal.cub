@@ -1,0 +1,23 @@
+setze Zeiteinheit auf 250 ms
+
+erstelle wuerfel(3) portalA
+erstelle wuerfel(3) portalB
+erstelle wuerfel(1) point
+erstelle zahl x -2
+
+faerbe portalA auf blau
+faerbe portalB auf RGB(255, 165, 0)
+faerbe point auf gruen
+
+verschiebe portalA auf (0, 0, 3)
+verschiebe portalB auf (0, 0, -3)
+
+anzeigen
+
+wiederhole
+    verschiebe point auf (x, 0, 0)
+	x = x +1
+	warte 1
+	anzeigen
+bis
+    x groesser 2

@@ -16,6 +16,17 @@ L			[a-zA-Z_]
 %%
 
 [ \t]	; // ignore all whitespace
+#[a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]   {
+    char buffer[3] = {0,0,0};
+    strncpy ( buffer, yytext+1, 2);
+    yylval.farbe_val.r = strtol(buffer, NULL,16);
+    strncpy ( buffer, yytext+3, 2);
+    yylval.farbe_val.g = strtol(buffer, NULL,16);
+    strncpy ( buffer, yytext+5, 2);
+    yylval.farbe_val.b = strtol(buffer, NULL,16);
+    printf("hex gefunden \n");
+    return T_FARBE;
+}
 [0-9]+		{yylval.ival = atoi(yytext); return T_INT;}
 \n	    	{return T_NEWLINE;}
 

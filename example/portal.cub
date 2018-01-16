@@ -5,6 +5,7 @@ erstelle wuerfel(3) portalB
 erstelle wuerfel(1) point
 erstelle Zahl x
 setze x auf 2
+setze x auf -2
 
 faerbe portalA auf blau
 faerbe portalB auf RGB(255, 165, 0)
@@ -15,7 +16,7 @@ verschiebe portalA auf (0, 0, 3)
 verschiebe portalB auf (0, 0, -3)
 
 anzeigen
-
+//Schleife
 wiederhole
     verschiebe point auf (0, 0, 0)
 	setze x auf 1

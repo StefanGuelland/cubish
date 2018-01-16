@@ -56,8 +56,8 @@ void yyerror(const char* s);
 %left T_GROESSER_GLEICH
 
 %token T_NICHT
-%token T_UND
-%token T_ODER
+%left  T_UND
+%left  T_ODER
 
 %token T_UEBERSCHNEIDET
 
@@ -230,12 +230,16 @@ math_exp:
 
 
 arith_exp:
-      math_exp T_GLEICH          math_exp             {printf("\t Gleich\n");}
-    | math_exp T_KLEINER         math_exp             {printf("\t Kleiner\n");}
-    | math_exp T_GROESSER        math_exp             {printf("\t Groesser\n");}
-    | math_exp T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
-    | math_exp T_GROESSER_GLEICH math_exp             {printf("\t Groesser Gleich\n");}
-    | math_exp T_UEBERSCHNEIDET  math_exp             {printf("\t Ueberschneidet\n");}
+      T_NICHT arith_exp                                {printf("\t Nicht\n");}
+    | arith_exp T_UND             arith_exp            {printf("\t Und\n");}
+    | arith_exp T_ODER            arith_exp            {printf("\t Oder\n");}
+    | T_KL_LINKS arith_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
+    | math_exp  T_GLEICH          math_exp             {printf("\t Gleich\n");}
+    | math_exp  T_KLEINER         math_exp             {printf("\t Kleiner\n");}
+    | math_exp  T_GROESSER        math_exp             {printf("\t Groesser\n");}
+    | math_exp  T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
+    | math_exp  T_GROESSER_GLEICH math_exp             {printf("\t Groesser Gleich\n");}
+    | math_exp  T_UEBERSCHNEIDET  math_exp             {printf("\t Ueberschneidet\n");}
 ;
 
 loop_and_exp:

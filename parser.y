@@ -265,7 +265,6 @@ program:
 	   | program line
 ;
 
-
 %%
 
 int main() {

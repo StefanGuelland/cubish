@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "artnet_client.h"
+#include <string.h>
+
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
@@ -213,6 +216,9 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
      }
    | T_KEYWORD_ANZEIGEN {
               printf("\t Sende Inhalte an Cube... \n");
+              uint8_t buffer[3*5*5*5];
+              memset(buffer,255,sizeof(buffer));
+              artnet_client_send(buffer, sizeof(buffer));
      }
 ;
 
@@ -274,11 +280,14 @@ program:
 
 int main() {
 	yyin = stdin;
+	artnet_client_init();
 
 	do {
 		yyparse();
 	} while(!feof(yyin));
 
+
+	artnet_client_deinit();
 	return 0;
 }
 

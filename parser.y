@@ -56,8 +56,8 @@ void yyerror(const char* s);
 %left T_GROESSER_GLEICH
 
 %token T_NICHT
-%token T_UND
-%token T_ODER
+%left  T_UND
+%left  T_ODER
 
 %token T_UEBERSCHNEIDET
 
@@ -175,10 +175,10 @@ farbe: T_FARBE { $$ = $1; }
 cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
               printf("Erstelle Zahl %s \n", $3);
      }
-   | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS T_INT T_KL_RECHTS T_IDENTIFIER {
+   | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS math_exp T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle wurfel %s mit Kantenlaenge %d\n", $6, $4);
      }
-   | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS T_IDENTIFIER {
+   | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle box %s mit Kantenlaengen x: %d y: %d z: %d\n", $10, $4, $6, $8);
      }
    | T_KEYWORD_VERSCHIEBE T_IDENTIFIER T_KEYWORD_UM koordinate {
@@ -199,17 +199,17 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
    | T_KEYWORD_ROTIERE T_KEYWORD_AUF T_X_AXE T_RECHTS {
               printf("\tRotiere rechts auf x achse...\n");
      }
-   | T_KEYWORD_WARTE T_INT T_KEYWORD_ZEITEINHEITEN {
+   | T_KEYWORD_WARTE math_exp T_KEYWORD_ZEITEINHEITEN {
               printf("\tWarte x Zeiteinheiten...\n");
      }
    | T_KEYWORD_ENTFERNE T_IDENTIFIER {
               printf("\tEntferne Identifier %s \n", $2);
      }
-   | T_KEYWORD_SETZE T_KEYWORD_ZEITEINHEITEN T_KEYWORD_AUF T_INT T_KEYWORD_MS {
+   | T_KEYWORD_SETZE T_KEYWORD_ZEITEINHEITEN T_KEYWORD_AUF math_exp T_KEYWORD_MS {
               printf("\t Setze Zeiteinheit auf xx ms\n");
      }
    | T_KEYWORD_SETZE T_IDENTIFIER T_KEYWORD_AUF math_exp {
-             printf("\t Setze bla auf wert xx \n");
+             printf("\t Setze %s auf wert %d \n", $2, $4);
      }
    | T_KEYWORD_ANZEIGEN {
               printf("\t Sende Inhalte an Cube... \n");
@@ -221,7 +221,7 @@ math_exp:
       T_IDENTIFIER                                     { $$ = 2; /*hier variable auf int aufloesen*/ }
     | T_INT                                            { $$ = $1; }
     | T_KL_LINKS math_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
-    | math_exp T_PLUS    math_exp                     {printf("\t Plus\n");}
+    | math_exp T_PLUS    math_exp                     { $$ = $1 + $3; printf("\t Plus\n");}
     | math_exp T_MINUS   math_exp                     {printf("\t Minus\n");}
     | math_exp T_MAL     math_exp                     {printf("\t Mal\n");}
     | math_exp T_GETEILT math_exp                     {printf("\t Geteilt\n");}
@@ -230,12 +230,16 @@ math_exp:
 
 
 arith_exp:
-      math_exp T_GLEICH          math_exp             {printf("\t Gleich\n");}
-    | math_exp T_KLEINER         math_exp             {printf("\t Kleiner\n");}
-    | math_exp T_GROESSER        math_exp             {printf("\t Groesser\n");}
-    | math_exp T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
-    | math_exp T_GROESSER_GLEICH math_exp             {printf("\t Groesser Gleich\n");}
-    | math_exp T_UEBERSCHNEIDET  math_exp             {printf("\t Ueberschneidet\n");}
+      T_NICHT arith_exp                                {printf("\t Nicht\n");}
+    | arith_exp T_UND             arith_exp            {printf("\t Und\n");}
+    | arith_exp T_ODER            arith_exp            {printf("\t Oder\n");}
+    | T_KL_LINKS arith_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
+    | math_exp  T_GLEICH          math_exp             {printf("\t Gleich\n");}
+    | math_exp  T_KLEINER         math_exp             {printf("\t Kleiner\n");}
+    | math_exp  T_GROESSER        math_exp             {printf("\t Groesser\n");}
+    | math_exp  T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
+    | math_exp  T_GROESSER_GLEICH math_exp             {printf("\t Groesser Gleich\n");}
+    | math_exp  T_UEBERSCHNEIDET  math_exp             {printf("\t Ueberschneidet\n");}
 ;
 
 loop_and_exp:

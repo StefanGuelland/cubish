@@ -223,23 +223,18 @@ math_exp:
 
 identifier_or_math_exp:
     | T_IDENTIFIER
-    | math_exp
+    | T_KL_LINKS math_exp T_KL_RECHTS
 ;
 
 arith_exp:
-    | identifier_or_math_exp T_GLEICH T_IDENTIFIER            {printf("\t Gleich\n");}
-    | identifier_or_math_exp T_KLEINER T_IDENTIFIER           {printf("\t Kleiner\n");}
-    | identifier_or_math_exp T_GROESSER T_IDENTIFIER          {printf("\t Groesser\n");}
-    | identifier_or_math_exp T_KLEINER_GLEICH T_IDENTIFIER    {printf("\t Kleiner Gleich\n");}
-    | identifier_or_math_exp T_GROESSER_GLEICH T_IDENTIFIER   {printf("\t Groesser Gleich\n");}
-    | identifier_or_math_exp T_UEBERSCHNEIDET T_IDENTIFIER    {printf("\t Ueberschneidet\n");}
+    | identifier_or_math_exp T_GLEICH identifier_or_math_exp            {printf("\t Gleich\n");}
+    | identifier_or_math_exp T_KLEINER identifier_or_math_exp           {printf("\t Kleiner\n");}
+    | identifier_or_math_exp T_GROESSER identifier_or_math_exp          {printf("\t Groesser\n");}
+    | identifier_or_math_exp T_KLEINER_GLEICH identifier_or_math_exp    {printf("\t Kleiner Gleich\n");}
+    | identifier_or_math_exp T_GROESSER_GLEICH identifier_or_math_exp   {printf("\t Groesser Gleich\n");}
+    | identifier_or_math_exp T_UEBERSCHNEIDET identifier_or_math_exp    {printf("\t Ueberschneidet\n");}
 ;
 
-exp:
-    | arith_exp                                               {printf("\t Arithmatischer Ausdruck\n");}
-    | T_KL_LINKS arith_exp T_KL_RECHTS                        {printf("\t Arithmatischer Ausdruck\n");}
-    | T_KL_LINKS math_exp T_KL_RECHTS arith_exp               {printf("\t Gemischter Ausdruck\n");}
-;
 
 smt:
     | cmd
@@ -247,14 +242,14 @@ smt:
 ;
 
 loop_and_exp:
-    | T_WIEDERHOLE cmd T_SOLANGE exp                {printf("\t Schleife\n");}
-    | T_WENN exp T_DANN smt                         {printf("\t If-Abfrage\n");}
+    | T_WIEDERHOLE cmd T_SOLANGE arith_exp                {printf("\t Schleife\n");}
+    | T_WENN arith_exp T_DANN smt                         {printf("\t If-Abfrage\n");}
 
 ;
 
 line: T_NEWLINE
     | loop_and_exp T_NEWLINE
-    | exp T_NEWLINE
+    | arith_exp T_NEWLINE
     | cmd T_NEWLINE
     | koordinate T_NEWLINE {
            printf("\tX: %i Y: %i Z: %i \n", $1.x, $1.y, $1.z);

@@ -17,7 +17,9 @@ ADD_FLEX_BISON_DEPENDENCY(MyScanner MyParser)
 
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(cubish
         ${BISON_MyParser_OUTPUTS}
         ${FLEX_MyScanner_OUTPUTS}
-        )
+        Identifier.h
+        Identifier.cpp)

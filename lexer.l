@@ -1,11 +1,10 @@
 %option noyywrap
 %option caseless
 
-L			[a-zA-Z_]
-
 %{
 #include <stdio.h>
 #include <stdint.h>
+#include "Identifier.h"
 
 #define YY_DECL int yylex()
 
@@ -106,5 +105,9 @@ L			[a-zA-Z_]
 "Z-Minimal"         {return T_Z_MIN;}
 "Z-Maximal"         {return T_Z_MAX;}
 
-{L}+   {return T_IDENTIFIER;}
+[a-zA-Z][a-zA-Z0-9]*   {
+    yylval.str_val = Identifier_add(yytext, yyleng);
+    return T_IDENTIFIER;
+    }
+
 %%

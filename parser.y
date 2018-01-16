@@ -219,7 +219,6 @@ math_exp:
     | T_IDENTIFIER T_MINUS T_IDENTIFIER                       {printf("\t Minus\n");}
     | T_IDENTIFIER T_MAL T_IDENTIFIER                         {printf("\t Mal\n");}
     | T_IDENTIFIER T_GETEILT T_IDENTIFIER                     {printf("\t Geteilt\n");}
-    | T_IDENTIFIER T_GETEILT_DURCH T_IDENTIFIER               {printf("\t Geteilt durch\n");}
     | T_IDENTIFIER T_MODULO T_IDENTIFIER                      {printf("\t Modulo\n");}
 ;
 

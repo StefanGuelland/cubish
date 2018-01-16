@@ -77,7 +77,7 @@ int artnet_client_init(void)
         case EAI_SERVICE: printf("service\n");
             break;
     }
-    
+
     return 0;
 }
 

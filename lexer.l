@@ -26,11 +26,10 @@
     printf("hex gefunden \n");
     return T_FARBE;
 }
-//TODO Kommentare möglich machen
-//TODO negative Zahlen
+    /*TODO Kommentare möglich machen*/
+    /*TODO negative Zahlen*/
 [0-9]+		{yylval.ival = atoi(yytext); return T_INT;}
 \n	    	{return T_NEWLINE;}
-
 "exit"		        {return T_QUIT;}
 "quit"		        {return T_QUIT;}
 

@@ -123,14 +123,14 @@ void yyerror(const char* s);
 %%
 
 koordinate: T_KOORDINATE { $$ = $1; }
-     | T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS{
+     | T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS{
            $$.x = $2;
            $$.y = $4;
            $$.z = $6;
       }
 
 farbe: T_FARBE { $$ = $1; }
-     | T_KEYWORD_RGB T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS {
+     | T_KEYWORD_RGB T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS {
             $$.r = $3;
             $$.g = $5;
             $$.b = $7;
@@ -243,10 +243,14 @@ arith_exp:
 ;
 
 loop_and_exp:
-      T_WIEDERHOLE program T_SOLANGE arith_exp                {printf("\t Schleife\n");}
-    | T_WIEDERHOLE program T_SOLANGE T_NEWLINE arith_exp      {printf("\t Schleife\n");}
-    | T_WENN arith_exp T_DANN cmd     %prec LOWER_THAN_ELSE   {printf("\t If-Abfrage\n");} /* prioritaet runtersetzen*/
-    | T_WENN arith_exp T_DANN cmd T_SONST cmd                 {printf("\t If-Abfrage\n");}
+      T_WIEDERHOLE program T_SOLANGE arith_exp             {printf("\t Schleife\n");}
+    | T_WIEDERHOLE program T_SOLANGE T_NEWLINE arith_exp   {printf("\t Schleife\n");}
+    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd     %prec LOWER_THAN_ELSE   {
+            printf("\t If-Abfrage\n");
+        } /* prioritaet runtersetzen*/
+    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd T_NEWLINE T_SONST T_NEWLINE cmd {
+            printf("\t If-Else-Abfrage\n");
+        }
 ;
 
 line:

@@ -15,6 +15,8 @@
 %%
 
 [ \t]	; // ignore all whitespace
+(^(\/\*)[A-Za-z0-9 ]*(\*\/)$|(\/\/)[\A-Za-z0-9 ]+) ; //ignores c-style comments
+
 #[a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9][a-fA-F0-9]   {
     char buffer[3] = {0,0,0};
     strncpy ( buffer, yytext+1, 2);
@@ -26,9 +28,8 @@
     printf("hex gefunden \n");
     return T_FARBE;
 }
-[0-9]+		{yylval.ival = atoi(yytext); return T_INT;}
-\n	    	{return T_NEWLINE;}
-
+-?[0-9]+		        {yylval.ival = atoi(yytext); return T_INT;}
+\n	    	        {return T_NEWLINE;}
 "exit"		        {return T_QUIT;}
 "quit"		        {return T_QUIT;}
 

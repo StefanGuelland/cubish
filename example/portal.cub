@@ -15,9 +15,10 @@ verschiebe portalB auf (0, 0, -3)
 anzeigen
 
 wiederhole
-    verschiebe point auf (x, 0, 0)
-	x = x +1
-	warte 1
+    verschiebe point auf (0, 0, 0)
+	setze x auf 1
+	warte 1 zeiteinheit
 	anzeigen
-bis
+solange
     x groesser 2
+

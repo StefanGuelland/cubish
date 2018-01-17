@@ -58,7 +58,7 @@ void yyerror(const char* s);
 %left T_GROESSER
 %left T_GROESSER_GLEICH
 
-%token T_NICHT
+%left T_NICHT
 %left  T_UND
 %left  T_ODER
 
@@ -254,7 +254,7 @@ loop_and_exp:
     | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd     %prec LOWER_THAN_ELSE   {
             printf("\t If-Abfrage\n");
         } /* prioritaet runtersetzen*/
-    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd T_NEWLINE T_SONST T_NEWLINE cmd {
+    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd T_SONST T_NEWLINE cmd {
             printf("\t If-Else-Abfrage\n");
         }
 ;

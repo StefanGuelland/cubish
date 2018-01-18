@@ -13,6 +13,8 @@
 #include <memory.h>
 
 #include <stdbool.h>
+#include <errno.h>
+
 #define AnsiString char //quick fix
 #include "Art-Net.h"
 
@@ -37,11 +39,11 @@ int artnet_client_init(void)
 
     sin6len = sizeof(struct sockaddr_in6);
 
-    sock = socket(PF_INET6, SOCK_DGRAM,0);
+    sock = socket(PF_INET, SOCK_DGRAM,0);
 
     memset(&sin6, 0, sizeof(struct sockaddr_in6));
     sin6.sin6_port = htons(0);
-    sin6.sin6_family = AF_INET6;
+    sin6.sin6_family = AF_INET;
     sin6.sin6_addr = in6addr_any;
 
     status = bind(sock, (struct sockaddr *)&sin6, sin6len);
@@ -96,6 +98,9 @@ void artnet_client_send(uint8_t* buffer, ssize_t len) {
 
     status = sendto(sock, &packet, packet_len, 0,
                     (struct sockaddr *)psinfo->ai_addr, sin6len);
+    if(status < 0) {
+        printf("Error Artnet send: %s",strerror(errno));
+    }
 }
 
 

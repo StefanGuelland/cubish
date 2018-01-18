@@ -10,6 +10,7 @@
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
+extern int yyget_lineno  (void);
 
 void yyerror(const char* s);
 %}
@@ -295,6 +296,6 @@ int main() {
 }
 
 void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
+	fprintf(stderr, "Parse error: %s on Line: %d\n", s, yyget_lineno());
 	exit(1);
 }

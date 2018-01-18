@@ -1,5 +1,6 @@
 %option noyywrap
 %option caseless
+%option yylineno
 
 %{
 #include <stdio.h>

@@ -1,7 +1,14 @@
-wenn (a plus b) kleiner d dann faerbe c auf gruen
-wenn a kleiner b dann faerbe c auf gruen
-wenn a kleiner b dann faerbe c auf gruen sonst faerbe c auf gelb
-wenn (a plus b) kleiner d dann faerbe c auf gruen sonst faerbe c auf gelb
-wenn (a plus b) kleiner (a plus d) dann faerbe c auf gruen sonst faerbe c auf gelb
-wenn (a plus b) kleiner (a plus d) kleiner c dann faerbe c auf gruen sonst faerbe c auf gelb
-wiederhole faerbe c auf gelb solange (a plus b) kleiner d
+wiederhole
+  anzeigen
+  warte 1 Zeiteinheit
+  erstelle zahl bla
+  erstelle wuerfel(3) portalB
+  erstelle box(3,4,5) portalA
+  verschiebe bla um (4,5,6)
+  verschiebe bla auf (4,5,6)
+  faerbe bla auf RGB(3,7,5)
+  faerbe bla um RGB(3,7,5)
+  anzeigen
+  warte 1 Zeiteinheit
+solange
+  47 gleich 11

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "Identifier.h"
+#include "ParseTreeNode_Interface.h"
 
 #define YY_DECL int yylex()
 

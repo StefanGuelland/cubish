@@ -6,6 +6,20 @@
 
 #include "artnet_client.h"
 #include <string.h>
+#include "ParseTreeNode_Interface.h"
+#include "parseTree/ProgramBlock.h"
+#include "parseTree/ErstelleZahl.h"
+#include "parseTree/ErstelleWuerfel.h"
+#include "parseTree/ErstelleBox.h"
+#include "parseTree/VerschiebeUm.h"
+#include "parseTree/VerschiebeAuf.h"
+#include "parseTree/FaerbeUm.h"
+#include "parseTree/FaerbeAuf.h"
+#include "parseTree/Anzeigen.h"
+#include "parseTree/Warte.h"
+
+
+#include "parseTree/Wiederhole.h"
 
 extern int yylex();
 extern int yyparse();
@@ -32,6 +46,7 @@ void yyerror(const char* s);
 	    int y;
 	    int z;
 	} koordinate_val;
+	ParseTreeNode_Interface* parseTreeEntry;
 }
 
 %left T_PLUS
@@ -122,7 +137,13 @@ void yyerror(const char* s);
 
 %type<ival> math_exp
 
-%start program
+%type<parseTreeEntry> program_start
+%type<parseTreeEntry> program
+%type<parseTreeEntry> line
+%type<parseTreeEntry> cmd
+%type<parseTreeEntry> loop_and_exp
+
+%start program_start
 
 %%
 
@@ -178,24 +199,31 @@ farbe: T_FARBE { $$ = $1; }
 
 cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
               printf("Erstelle Zahl %s \n", $3);
+              $$ = new ParseTree::ErstelleZahl($3);
      }
    | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS math_exp T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle wurfel %s mit Kantenlaenge %d\n", $6, $4);
+              $$ = new ParseTree::ErstelleWuerfel($6, $4);
      }
    | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle box %s mit Kantenlaengen x: %d y: %d z: %d\n", $10, $4, $6, $8);
+              $$ = new ParseTree::ErstelleBox($10, $4, $6, $8);
      }
    | T_KEYWORD_VERSCHIEBE T_IDENTIFIER T_KEYWORD_UM koordinate {
               printf("\t cmd verschiebe %s um: X: %i Y: %i Z: %i \n", $2, $4.x, $4.y, $4.z);
+              $$ = new ParseTree::VerschiebeUm($2, $4.x, $4.y, $4.z);
      }
    | T_KEYWORD_VERSCHIEBE T_IDENTIFIER T_KEYWORD_AUF koordinate {
               printf("\t cmd verschiebe %s auf: X: %i Y: %i Z: %i \n", $2, $4.x, $4.y, $4.z);
+              $$ = new ParseTree::VerschiebeAuf($2, $4.x, $4.y, $4.z);
      }
    | T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_UM farbe {
-         printf("\t cmd faerbe %s um: Red: %i Green: %i Blue: %i \n", $2, $4.r, $4.g, $4.b);
+              printf("\t cmd faerbe %s um: Red: %i Green: %i Blue: %i \n", $2, $4.r, $4.g, $4.b);
+              $$ = new ParseTree::FaerbeUm($2, $4.r, $4.g, $4.b);
      }
    | T_KEYWORD_FAERBE T_IDENTIFIER T_KEYWORD_AUF farbe {
               printf("\t cmd faerbe %s auf: Red: %i Green: %i Blue: %i \n", $2, $4.r, $4.g, $4.b);
+              $$ = new ParseTree::FaerbeAuf($2, $4.r, $4.g, $4.b);
      }
    | T_KEYWORD_ROTIERE T_KEYWORD_AUF T_X_AXE T_LINKS {
               printf("\tRotiere links auf x achse...\n");
@@ -205,6 +233,7 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
      }
    | T_KEYWORD_WARTE math_exp T_KEYWORD_ZEITEINHEITEN {
               printf("\tWarte x Zeiteinheiten...\n");
+              $$ = new ParseTree::Warte(2);
      }
    | T_KEYWORD_ENTFERNE T_IDENTIFIER {
               printf("\tEntferne Identifier %s \n", $2);
@@ -220,6 +249,7 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
               uint8_t buffer[3*5*5*5];
               memset(buffer,255,sizeof(buffer));
               artnet_client_send(buffer, sizeof(buffer));
+              $$ = new ParseTree::Anzeigen();
      }
 ;
 
@@ -241,7 +271,10 @@ arith_exp:
     | arith_exp T_UND             arith_exp            {printf("\t Und\n");}
     | arith_exp T_ODER            arith_exp            {printf("\t Oder\n");}
     | T_KL_LINKS arith_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
-    | math_exp  T_GLEICH          math_exp             {printf("\t Gleich\n");}
+    | math_exp  T_GLEICH          math_exp             {
+        printf("\t Gleich\n");
+
+    }
     | math_exp  T_KLEINER         math_exp             {printf("\t Kleiner\n");}
     | math_exp  T_GROESSER        math_exp             {printf("\t Groesser\n");}
     | math_exp  T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
@@ -250,40 +283,70 @@ arith_exp:
 ;
 
 loop_and_exp:
-      T_WIEDERHOLE program T_SOLANGE arith_exp             {printf("\t Schleife\n");}
-    | T_WIEDERHOLE program T_SOLANGE T_NEWLINE arith_exp   {printf("\t Schleife\n");}
-    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd     %prec LOWER_THAN_ELSE   {
+      T_WIEDERHOLE program T_SOLANGE arith_exp             {
+            printf("\t Schleife\n");
+            $$ = new ParseTree::Wiederhole($2, NULL);
+            //todo hier NULL durch $4 ersetzen
+      }
+    | T_WIEDERHOLE program T_SOLANGE T_NEWLINE arith_exp   {
+           printf("\t Schleife\n");
+           $$ = new ParseTree::Wiederhole($2, NULL);
+           //todo hier NULL durch $4 ersetzen
+     }
+    | T_WENN arith_exp T_DANN  cmd     %prec LOWER_THAN_ELSE   {
             printf("\t If-Abfrage\n");
         } /* prioritaet runtersetzen*/
-    | T_WENN T_NEWLINE arith_exp T_NEWLINE T_DANN T_NEWLINE cmd T_SONST T_NEWLINE cmd {
+    | T_WENN  arith_exp  T_DANN  cmd T_SONST  cmd {
             printf("\t If-Else-Abfrage\n");
         }
 ;
 
 line:
-      T_NEWLINE
-    | cmd T_NEWLINE
-    | koordinate T_NEWLINE {
+
+      cmd {$$ = $1;}
+    | koordinate {
            printf("\tX: %i Y: %i Z: %i \n", $1.x, $1.y, $1.z);
        }
-    | farbe T_NEWLINE {
+    | farbe {
             printf("\tRed: %i Green: %i Blue: %i \n", $1.r, $1.g, $1.b);
         }
-    | T_QUIT T_NEWLINE {
+    | T_QUIT {
             printf("bye!\n"); exit(0);
         }
 
-    | loop_and_exp T_NEWLINE
+    | loop_and_exp
 ;
 
 program:
-	   | program line
+         line {
+            printf("\tProgram line only\n");
+            $$ = $1;
+
+       }
+       | program T_NEWLINE { $$ = $1; }
+       | T_NEWLINE program { $$ = $2; }
+	   | program line {
+	        printf("\tProgram\n");
+            $$ = new ParseTree::ProgramBlock($1, $2);
+	   }
 ;
+
+program_start:
+        program {
+            $$ = $1;
+            printf("Starte Program\n");
+            $$->Execute();
+        }
 
 %%
 
-int main() {
-	yyin = stdin;
+#include <cstdio>
+
+int main(int argc, char* argv[]) {
+    if(argc == 1)
+	    yyin = stdin;
+	else
+	    yyin = fopen(argv[1], "r");
 	artnet_client_init();
 
 	do {

@@ -49,7 +49,6 @@ anzeigen
 wenn
     x kleiner 5
 dann
-    verschiebe b um (x, 0, 0)
-sonst
+    verschiebe b um (x, 0, 0) sonst
     verschiebe b um (-x, 0, 0)
 

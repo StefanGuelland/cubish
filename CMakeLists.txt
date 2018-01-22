@@ -25,5 +25,8 @@ add_executable(cubish
         Identifier.h
         Identifier.cpp
         artnet_client.c
-        artnet_client.h)
+        artnet_client.h
+        ParseTree.cpp
+        ParseTree.h
+        ParseTreeNode_Interface.h parseTree/ErstelleZahl.cpp parseTree/ErstelleZahl.h parseTree/ErstelleWuerfel.cpp parseTree/ErstelleWuerfel.h parseTree/ErstelleBox.cpp parseTree/ErstelleBox.h parseTree/VerschiebeUm.cpp parseTree/VerschiebeUm.h parseTree/VerschiebeAuf.cpp parseTree/VerschiebeAuf.h parseTree/ProgramBlock.cpp parseTree/ProgramBlock.h parseTree/FaerbeAuf.cpp parseTree/FaerbeAuf.h parseTree/FaerbeUm.cpp parseTree/FaerbeUm.h parseTree/Anzeigen.cpp parseTree/Anzeigen.h parseTree/Warte.cpp parseTree/Warte.h parseTree/Wiederhole.cpp parseTree/Wiederhole.h ParseTreeNodeBool_Interface.h parseTree/Gleich.cpp parseTree/Gleich.h ParseTreeNodeInt_Interface.h)
 

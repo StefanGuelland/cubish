@@ -6,7 +6,12 @@
 
 #include "artnet_client.h"
 #include <string.h>
+
 #include "ParseTreeNode_Interface.h"
+#include "ParseTreeNodeBool_Interface.h"
+#include "ParseTreeNodeInt_Interface.h"
+
+#include "parseTree/SetzeIntegerIdentifier.h"
 #include "parseTree/ProgramBlock.h"
 #include "parseTree/ErstelleZahl.h"
 #include "parseTree/ErstelleWuerfel.h"
@@ -20,6 +25,19 @@
 
 
 #include "parseTree/Wiederhole.h"
+
+
+#include "parseTree/Gleich.h"
+#include "parseTree/Groesser.h"
+#include "parseTree/Kleiner.h"
+
+#include "parseTree/Integer.h"
+#include "parseTree/IntegerIdentifier.h"
+#include "parseTree/Plus.h"
+#include "parseTree/Minus.h"
+#include "parseTree/Mal.h"
+#include "parseTree/Geteilt.h"
+#include "parseTree/Modulo.h"
 
 extern int yylex();
 extern int yyparse();
@@ -47,16 +65,12 @@ void yyerror(const char* s);
 	    int z;
 	} koordinate_val;
 	ParseTreeNode_Interface* parseTreeEntry;
+	ParseTreeNodeBool_Interface* parseTreeBoolEntry;
+	ParseTreeNodeInt_Interface* parseTreeIntEntry;
 }
 
-%left T_PLUS
-%left T_MINUS
-%left T_MAL
-%left T_GETEILT
-%left T_MODULO
 
-%token T_KL_LINKS
-%token T_KL_RECHTS
+
 
 %token T_WIEDERHOLE
 %token T_SOLANGE
@@ -132,10 +146,21 @@ void yyerror(const char* s);
 %token<farbe_val> T_FARBE
 %token<koordinate_val> T_KOORDINATE
 
+
+%left T_PLUS
+%left T_MINUS
+%left T_MAL
+%left T_GETEILT
+%left T_MODULO
+
+%left T_KL_LINKS
+%left T_KL_RECHTS
+
 %type<koordinate_val> koordinate
 %type<farbe_val> farbe
 
-%type<ival> math_exp
+%type<parseTreeIntEntry> math_exp
+%type<parseTreeBoolEntry> arith_exp
 
 %type<parseTreeEntry> program_start
 %type<parseTreeEntry> program
@@ -149,13 +174,13 @@ void yyerror(const char* s);
 
 koordinate: T_KOORDINATE { $$ = $1; }
      | T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS{
-           $$.x = $2;
-           $$.y = $4;
-           $$.z = $6;
+           //$$.x = $2;
+           //$$.y = $4;
+           //$$.z = $6;
       }
 
 farbe: T_FARBE { $$ = $1; }
-     | T_KEYWORD_RGB T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS {
+     | T_KEYWORD_RGB T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS {
             $$.r = $3;
             $$.g = $5;
             $$.b = $7;
@@ -201,11 +226,11 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
               printf("Erstelle Zahl %s \n", $3);
               $$ = new ParseTree::ErstelleZahl($3);
      }
-   | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS math_exp T_KL_RECHTS T_IDENTIFIER {
+   | T_KEYWORD_ERSTELLE T_KEYWORD_WUERFEL T_KL_LINKS T_INT T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle wurfel %s mit Kantenlaenge %d\n", $6, $4);
               $$ = new ParseTree::ErstelleWuerfel($6, $4);
      }
-   | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS math_exp T_SEPARATOR math_exp T_SEPARATOR math_exp T_KL_RECHTS T_IDENTIFIER {
+   | T_KEYWORD_ERSTELLE T_KEYWORD_BOX T_KL_LINKS T_INT T_SEPARATOR T_INT T_SEPARATOR T_INT T_KL_RECHTS T_IDENTIFIER {
               printf("\t cmd erstelle box %s mit Kantenlaengen x: %d y: %d z: %d\n", $10, $4, $6, $8);
               $$ = new ParseTree::ErstelleBox($10, $4, $6, $8);
      }
@@ -243,26 +268,48 @@ cmd: T_KEYWORD_ERSTELLE T_KEYWORD_ZAHL T_IDENTIFIER {
      }
    | T_KEYWORD_SETZE T_IDENTIFIER T_KEYWORD_AUF math_exp {
              printf("\t Setze %s auf wert %d \n", $2, $4);
+              $$ = new ParseTree::SetzeIntegerIdentifier($2, $4);
+
      }
    | T_KEYWORD_ANZEIGEN {
               printf("\t Sende Inhalte an Cube... \n");
-              uint8_t buffer[3*5*5*5];
-              memset(buffer,255,sizeof(buffer));
-              artnet_client_send(buffer, sizeof(buffer));
               $$ = new ParseTree::Anzeigen();
      }
 ;
 
 
 math_exp:
-      T_IDENTIFIER                                     { $$ = 2; /*hier variable auf int aufloesen*/ }
-    | T_INT                                            { $$ = $1; }
-    | T_KL_LINKS math_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
-    | math_exp T_PLUS    math_exp                     { $$ = $1 + $3; printf("\t Plus\n");}
-    | math_exp T_MINUS   math_exp                     {printf("\t Minus\n");}
-    | math_exp T_MAL     math_exp                     {printf("\t Mal\n");}
-    | math_exp T_GETEILT math_exp                     {printf("\t Geteilt\n");}
-    | math_exp T_MODULO  math_exp                     {printf("\t Modulo\n");}
+      T_IDENTIFIER                                     {
+           $$ = new ParseTree::IntegerIdentifier($1);
+    }
+    | T_INT                                            {
+         $$ = new ParseTree::Integer($1);
+    }
+
+    |T_KL_LINKS math_exp T_KL_RECHTS                 {
+        printf("\t Klammern\n");
+        $$ = $2;
+    }
+    | math_exp T_PLUS    math_exp                     {
+        printf("\t Plus\n");
+        $$ = new ParseTree::Plus($1, $3);
+    }
+    | math_exp T_MINUS   math_exp                     {
+        printf("\t Minus\n");
+        $$ = new ParseTree::Minus($1, $3);
+    }
+    | math_exp T_MAL     math_exp                     {
+        printf("\t Mal\n");
+        $$ = new ParseTree::Mal($1, $3);
+    }
+    | math_exp T_GETEILT math_exp                     {
+        printf("\t Geteilt\n");
+        $$ = new ParseTree::Geteilt($1, $3);
+    }
+    | math_exp T_MODULO  math_exp                     {
+        printf("\t Modulo\n");
+        $$ = new ParseTree::Modulo($1, $3);
+    }
 ;
 
 
@@ -270,13 +317,22 @@ arith_exp:
       T_NICHT arith_exp                                {printf("\t Nicht\n");}
     | arith_exp T_UND             arith_exp            {printf("\t Und\n");}
     | arith_exp T_ODER            arith_exp            {printf("\t Oder\n");}
-    | T_KL_LINKS arith_exp T_KL_RECHTS                 {printf("\t Klammern\n");}
+    | T_KL_LINKS arith_exp T_KL_RECHTS                 {
+        printf("\t Klammern\n");
+        $$ = $2;
+    }
     | math_exp  T_GLEICH          math_exp             {
         printf("\t Gleich\n");
-
+        $$ = new ParseTree::Gleich($1, $3);
     }
-    | math_exp  T_KLEINER         math_exp             {printf("\t Kleiner\n");}
-    | math_exp  T_GROESSER        math_exp             {printf("\t Groesser\n");}
+    | math_exp  T_KLEINER         math_exp             {
+        printf("\t Kleiner\n");
+        $$ = new ParseTree::Kleiner($1, $3);
+    }
+    | math_exp  T_GROESSER        math_exp             {
+        printf("\t Groesser\n");
+        $$ = new ParseTree::Groesser($1, $3);
+    }
     | math_exp  T_KLEINER_GLEICH  math_exp             {printf("\t Kleiner Gleich\n");}
     | math_exp  T_GROESSER_GLEICH math_exp             {printf("\t Groesser Gleich\n");}
     | math_exp  T_UEBERSCHNEIDET  math_exp             {printf("\t Ueberschneidet\n");}
@@ -285,13 +341,11 @@ arith_exp:
 loop_and_exp:
       T_WIEDERHOLE program T_SOLANGE arith_exp             {
             printf("\t Schleife\n");
-            $$ = new ParseTree::Wiederhole($2, NULL);
-            //todo hier NULL durch $4 ersetzen
+            $$ = new ParseTree::Wiederhole($2, $4);
       }
     | T_WIEDERHOLE program T_SOLANGE T_NEWLINE arith_exp   {
            printf("\t Schleife\n");
-           $$ = new ParseTree::Wiederhole($2, NULL);
-           //todo hier NULL durch $4 ersetzen
+           $$ = new ParseTree::Wiederhole($2, $5);
      }
     | T_WENN arith_exp T_DANN  cmd     %prec LOWER_THAN_ELSE   {
             printf("\t If-Abfrage\n");
@@ -323,8 +377,8 @@ program:
             $$ = $1;
 
        }
-       | program T_NEWLINE { $$ = $1; }
-       | T_NEWLINE program { $$ = $2; }
+       /*| program T_NEWLINE { $$ = $1; }
+       | T_NEWLINE program { $$ = $2; }*/
 	   | program line {
 	        printf("\tProgram\n");
             $$ = new ParseTree::ProgramBlock($1, $2);

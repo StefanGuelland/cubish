@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include "Identifier.h"
 #include "ParseTreeNode_Interface.h"
+#include "ParseTreeNodeBool_Interface.h"
+#include "ParseTreeNodeInt_Interface.h"
 
 #define YY_DECL int yylex()
 
@@ -31,7 +33,7 @@
     return T_FARBE;
 }
 -?[0-9]+		        {yylval.ival = atoi(yytext); return T_INT;}
-\n	    	        {return T_NEWLINE;}
+\n	    	        ;//{//return T_NEWLINE;}
 "exit"		        {return T_QUIT;}
 "quit"		        {return T_QUIT;}
 

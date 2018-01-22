@@ -11,7 +11,6 @@ ParseTree::ProgramBlock::ProgramBlock(ParseTreeNode_Interface *node1_, ParseTree
 }
 
 void ParseTree::ProgramBlock::Execute(void) {
-//    std::cout << "\tProgramBlock " << std::endl;
     if(node1 != NULL)
         node1->Execute();
     if(node2 != NULL)

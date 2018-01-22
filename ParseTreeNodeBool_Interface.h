@@ -10,7 +10,7 @@
 
 class ParseTreeNodeBool_Interface : public ParseTreeNode_Interface {
 public:
-    virtual bool ExecuteBool() { return false;};
+    virtual bool ExecuteBool() { return true;};
 };
 
 

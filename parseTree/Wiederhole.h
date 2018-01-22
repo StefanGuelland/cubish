@@ -6,6 +6,7 @@
 #define CUBISH_WIEDERHOLE_H
 
 #include <ParseTreeNode_Interface.h>
+#include <ParseTreeNodeBool_Interface.h>
 
 namespace ParseTree {
 
@@ -13,10 +14,10 @@ namespace ParseTree {
 
     private:
         ParseTreeNode_Interface* inner_nodes;
-        ParseTreeNode_Interface* bool_expression;
+        ParseTreeNodeBool_Interface* bool_expression;
 
     public:
-        Wiederhole(ParseTreeNode_Interface* inner_nodes_, ParseTreeNode_Interface* bool_expression_);
+        Wiederhole(ParseTreeNode_Interface* inner_nodes_, ParseTreeNodeBool_Interface* bool_expression_);
         virtual void Execute(void);
     };
 

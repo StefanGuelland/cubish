@@ -1,28 +1,28 @@
 //
-// Created by sguelland on 18.01.18.
+// Created by sguelland on 22.01.18.
 //
 
-#ifndef CUBISH_GLEICH_H
-#define CUBISH_GLEICH_H
+#ifndef CUBISH_KLEINER_H
+#define CUBISH_KLEINER_H
+
 
 #include <ParseTreeNodeBool_Interface.h>
 #include <ParseTreeNodeInt_Interface.h>
 
 namespace ParseTree {
 
-    class Gleich : public ParseTreeNodeBool_Interface{
+    class Kleiner : public ParseTreeNodeBool_Interface{
 
     private:
         ParseTreeNodeInt_Interface* node1;
         ParseTreeNodeInt_Interface* node2;
 
     public:
-        Gleich(ParseTreeNodeInt_Interface* node1_, ParseTreeNodeInt_Interface* node2_);
+        Kleiner(ParseTreeNodeInt_Interface* node1_, ParseTreeNodeInt_Interface* node2_);
 
         virtual bool ExecuteBool(void);
     };
 
 }
 
-
-#endif //CUBISH_GLEICH_H
+#endif //CUBISH_KLEINER_H

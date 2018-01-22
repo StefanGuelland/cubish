@@ -10,7 +10,7 @@
 
 class ParseTreeNodeInt_Interface : public ParseTreeNode_Interface {
 public:
-    virtual bool ExecuteInt() { return 0;};
+    virtual int ExecuteInt() { return 0;};
 };
 
 

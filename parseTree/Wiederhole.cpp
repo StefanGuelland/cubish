@@ -5,14 +5,14 @@
 #include "Wiederhole.h"
 
 void ParseTree::Wiederhole::Execute(void) {
-    while(true) {
+    do {
         inner_nodes->Execute();
-    }
+    } while(bool_expression->ExecuteBool());
 }
 
 ParseTree::Wiederhole::Wiederhole(
         ParseTreeNode_Interface *inner_nodes_,
-        ParseTreeNode_Interface *bool_expression_) {
+        ParseTreeNodeBool_Interface *bool_expression_) {
     inner_nodes = inner_nodes_;
     bool_expression = bool_expression_;
 

@@ -4,11 +4,11 @@
 
 #include "Gleich.h"
 
-ParseTree::Gleich::Gleich(ParseTreeNode_Interface *node1_, ParseTreeNode_Interface *node2_) {
+ParseTree::Gleich::Gleich(ParseTreeNodeInt_Interface *node1_, ParseTreeNodeInt_Interface *node2_) {
     node1 = node1_;
     node2 = node2_;
 }
 
 bool ParseTree::Gleich::ExecuteBool(void) {
-    return true;
+    return node1->ExecuteInt() == node2->ExecuteInt();
 }

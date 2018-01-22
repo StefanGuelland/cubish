@@ -1,3 +1,4 @@
+setze x auf 0
 wiederhole
   anzeigen
   warte 1 Zeiteinheit
@@ -6,9 +7,25 @@ wiederhole
   erstelle box(3,4,5) portalA
   verschiebe bla um (4,5,6)
   verschiebe bla auf (4,5,6)
-  faerbe bla auf RGB(3,7,5)
   faerbe bla um RGB(3,7,5)
-  anzeigen
-  warte 1 Zeiteinheit
+
+
+    faerbe bla auf blau
+    anzeigen
+    warte 1 Zeiteinheit
+
+    faerbe bla auf rot
+    anzeigen
+    warte 1 Zeiteinheit
+
+    faerbe bla auf gelb
+    anzeigen
+    warte 1 Zeiteinheit
+
+    faerbe bla auf gruen
+    anzeigen
+    warte 1 Zeiteinheit
+
+  setze x auf 1 plus x
 solange
-  47 gleich 11
+  x kleiner 40

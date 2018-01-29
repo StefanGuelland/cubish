@@ -23,9 +23,8 @@
 #include "parseTree/Anzeigen.h"
 #include "parseTree/Warte.h"
 
-
 #include "parseTree/Wiederhole.h"
-
+#include "parseTree/Wenn.h"
 
 #include "parseTree/Gleich.h"
 #include "parseTree/Groesser.h"
@@ -349,9 +348,11 @@ loop_and_exp:
      }
     | T_WENN arith_exp T_DANN  cmd     %prec LOWER_THAN_ELSE   {
             printf("\t If-Abfrage\n");
+            $$ = new ParseTree::Wenn($2, $4, NULL);
         } /* prioritaet runtersetzen*/
     | T_WENN  arith_exp  T_DANN  cmd T_SONST  cmd {
             printf("\t If-Else-Abfrage\n");
+            $$ = new ParseTree::Wenn($2, $4, $6);
         }
 ;
 

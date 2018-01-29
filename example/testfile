@@ -14,11 +14,12 @@ wiederhole
     anzeigen
     warte 1 Zeiteinheit
 
-    faerbe bla auf rot
-    anzeigen
-    warte 1 Zeiteinheit
+    wenn (x modulo 2 gleich 1)
+    dann
+        faerbe bla auf rot
+    sonst
+        faerbe bla auf gelb
 
-    faerbe bla auf gelb
     anzeigen
     warte 1 Zeiteinheit
 
